@@ -3,6 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:oauth2/oauth2.dart';
 import 'package:repo_viewer/auth/domain/auth_failure.dart';
 import 'package:repo_viewer/auth/infrastructure/credentials_storage/credentials_storage.dart';
+import 'package:http/http.dart' as http;
+
+class GithubOauthHttpClient extends http.BaseClient {
+  final httpClient = http.Client();
+
+  @override
+  Future<http.StreamedResponse> send(http.BaseRequest request) {
+    request.headers['Accept'] = 'application/json';
+    return httpClient.send(request);
+  }
+}
 
 class GithubAuthenticator {
   final CredentialsStorage _credentialStorage;
@@ -42,6 +53,7 @@ class GithubAuthenticator {
       authorizationEndpoint,
       tokenEndpoint,
       secret: clientSecret,
+      httpClient: GithubOauthHttpClient(),
     );
   }
 
@@ -61,6 +73,15 @@ class GithubAuthenticator {
       return left(const AuthFailure.server());
     } on AuthorizationException catch (e) {
       return left(AuthFailure.server('${e.error} , ${e.description}'));
+    } on PlatformException {
+      return left(const AuthFailure.storage());
+    }
+  }
+
+  Future<Either<AuthFailure, Unit>> signOut() async {
+    try {
+      await _credentialStorage.clear();
+      return right(unit);
     } on PlatformException {
       return left(const AuthFailure.storage());
     }
