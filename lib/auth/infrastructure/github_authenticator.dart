@@ -1,9 +1,12 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart';
+
 import 'package:repo_viewer/auth/domain/auth_failure.dart';
 import 'package:repo_viewer/auth/infrastructure/credentials_storage/credentials_storage.dart';
-import 'package:http/http.dart' as http;
+import 'package:repo_viewer/core/shared/encoders.dart';
 
 class GithubOauthHttpClient extends http.BaseClient {
   final httpClient = http.Client();
@@ -17,14 +20,20 @@ class GithubOauthHttpClient extends http.BaseClient {
 
 class GithubAuthenticator {
   final CredentialsStorage _credentialStorage;
+  final Dio _dio;
 
-  GithubAuthenticator(this._credentialStorage);
+  GithubAuthenticator(
+    this._credentialStorage,
+    this._dio,
+  );
 
   static final authorizationEndpoint =
       Uri.parse('https://github.com/login/oauth/authorize');
   static final tokenEndpoint =
       Uri.parse('https://github.com/login/oauth/access_token');
   static final redirectUrl = Uri.parse('http://localhost:3000/callback');
+  static final revocationEndpoint =
+      Uri.parse('https://api.github.com/applications/$clientId/token');
   static const clientId = '';
   static const clientSecret = '';
   static const scopes = ['read:user, repo'];
@@ -79,7 +88,19 @@ class GithubAuthenticator {
   }
 
   Future<Either<AuthFailure, Unit>> signOut() async {
+    final accessToken =
+        _credentialStorage.read().then((credential) => credential?.accessToken);
+
+    final userPass = stringToBase64.encode('$clientId:$clientSecret');
+
     try {
+      _dio.deleteUri(
+        revocationEndpoint,
+        data: {"access_token": accessToken},
+        options: Options(
+          headers: {'Authorization': 'basic $userPass '},
+        ),
+      );
       await _credentialStorage.clear();
       return right(unit);
     } on PlatformException {
