@@ -17,7 +17,7 @@ final dioProvider = Provider(
   (ref) => Dio(),
 );
 
-final gitthubAuthenticatorProvider = Provider(
+final githubAuthenticatorProvider = Provider(
   (ref) => GithubAuthenticator(
     ref.watch(credentialsStorageProvider),
     ref.watch(dioProvider),
@@ -26,6 +26,6 @@ final gitthubAuthenticatorProvider = Provider(
 
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>(
   (ref) => AuthNotifier(
-    ref.watch(gitthubAuthenticatorProvider),
+    ref.watch(githubAuthenticatorProvider),
   ),
 );
