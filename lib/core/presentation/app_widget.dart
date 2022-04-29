@@ -20,6 +20,7 @@ class AppWidget extends ConsumerWidget {
     ref.listen(initializationProvider, (previous, next) {});
     ref.listen<AuthState>(authNotifierProvider, (previous, next) {
       next.maybeWhen(
+          //
           orElse: () {},
           authenticated: () {
             appRouter.pushAndPopUntil(
