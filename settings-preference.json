@@ -1,0 +1,30 @@
+{
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [
+            80
+        ],
+        "editor.selectionHighlight": false,
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": false
+    },
+    "dart.openDevTools": "flutter",
+    "git.autofetch": true,
+    "bracket-pair-colorizer-2.highlightActiveScope": true,
+    "bracket-pair-colorizer-2.showBracketsInRuler": true,
+    "dart.previewFlutterUiGuides": true,
+    "dart.debugExternalPackageLibraries": false,
+    "dart.debugSdkLibraries": false,
+    "workbench.iconTheme": "material-icon-theme",
+    "editor.codeActionsOnSave" : {
+        "source.fixAll" : true
+    },
+    "editor.bracketPairColorization.enabled": true,
+        "editor.guides.bracketPairs": "active",
+        "git.confirmSync": false
+        
+    
+}
