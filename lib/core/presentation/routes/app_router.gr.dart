@@ -37,8 +37,14 @@ class AppRouter extends _i5.RootStackRouter {
           routeData: routeData, child: const _i3.StarredReposPage());
     },
     AuthorizationRoute.name: (routeData) {
+      final args = routeData.argsAs<AuthorizationRouteArgs>();
       return _i5.MaterialPageX<dynamic>(
-          routeData: routeData, child: const _i4.AuthorizationPage());
+          routeData: routeData,
+          child: _i4.AuthorizationPage(
+              key: args.key,
+              authorizationUrl: args.authorizationUrl,
+              onAuthorizationCodeRedirectAttempt:
+                  args.onAuthorizationCodeRedirectAttempt));
     }
   };
 
@@ -77,8 +83,36 @@ class StarredReposRoute extends _i5.PageRouteInfo<void> {
 
 /// generated route for
 /// [_i4.AuthorizationPage]
-class AuthorizationRoute extends _i5.PageRouteInfo<void> {
-  const AuthorizationRoute() : super(AuthorizationRoute.name, path: '/auth');
+class AuthorizationRoute extends _i5.PageRouteInfo<AuthorizationRouteArgs> {
+  AuthorizationRoute(
+      {_i6.Key? key,
+      required Uri authorizationUrl,
+      required void Function(Uri) onAuthorizationCodeRedirectAttempt})
+      : super(AuthorizationRoute.name,
+            path: '/auth',
+            args: AuthorizationRouteArgs(
+                key: key,
+                authorizationUrl: authorizationUrl,
+                onAuthorizationCodeRedirectAttempt:
+                    onAuthorizationCodeRedirectAttempt));
 
   static const String name = 'AuthorizationRoute';
+}
+
+class AuthorizationRouteArgs {
+  const AuthorizationRouteArgs(
+      {this.key,
+      required this.authorizationUrl,
+      required this.onAuthorizationCodeRedirectAttempt});
+
+  final _i6.Key? key;
+
+  final Uri authorizationUrl;
+
+  final void Function(Uri) onAuthorizationCodeRedirectAttempt;
+
+  @override
+  String toString() {
+    return 'AuthorizationRouteArgs{key: $key, authorizationUrl: $authorizationUrl, onAuthorizationCodeRedirectAttempt: $onAuthorizationCodeRedirectAttempt}';
+  }
 }

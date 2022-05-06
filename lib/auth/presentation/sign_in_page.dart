@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -37,11 +39,21 @@ class SignInPage extends ConsumerWidget {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      ref
-                          .read(authNotifierProvider.notifier)
-                          .signIn((authorizationUrl) {
-                        AutoRouter.of(context).push(const AuthorizationRoute());
-                      });
+                      ref.read(authNotifierProvider.notifier).signIn(
+                        (authorizationUrl) {
+                          final completer = Completer();
+                          AutoRouter.of(context).push(
+                            AuthorizationRoute(
+                              authorizationUrl: authorizationUrl,
+                              onAuthorizationCodeRedirectAttempt:
+                                  (redirectedUrl) {
+                                completer.complete(redirectedUrl);
+                              },
+                            ),
+                          );
+                          return completer.future as Future<Uri>;
+                        },
+                      );
                     },
                     child: const Text('Sign In'),
                     style: ButtonStyle(
