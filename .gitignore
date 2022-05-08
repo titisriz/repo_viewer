@@ -49,4 +49,4 @@ app.*.map.json
 *.freezed.dart
 *.g.dart
 
-./vscode/*
+./vscode/
