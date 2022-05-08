@@ -12,4 +12,6 @@ abstract class GithubRepo with _$GithubRepo {
     required String description,
     required int stargazersCount,
   }) = _GithubRepo;
+
+  String get fullName => '${owner.name}/$name';
 }
