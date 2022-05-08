@@ -41,7 +41,7 @@ class SignInPage extends ConsumerWidget {
                     onPressed: () {
                       ref.read(authNotifierProvider.notifier).signIn(
                         (authorizationUrl) {
-                          final completer = Completer();
+                          final completer = Completer<Uri>();
                           AutoRouter.of(context).push(
                             AuthorizationRoute(
                               authorizationUrl: authorizationUrl,
@@ -51,7 +51,7 @@ class SignInPage extends ConsumerWidget {
                               },
                             ),
                           );
-                          return completer.future as Future<Uri>;
+                          return completer.future;
                         },
                       );
                     },
