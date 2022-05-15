@@ -1,5 +1,5 @@
 class RestApiException implements Exception {
-  final int? code;
+  final int? errorCode;
 
-  RestApiException(this.code);
+  RestApiException(this.errorCode);
 }
