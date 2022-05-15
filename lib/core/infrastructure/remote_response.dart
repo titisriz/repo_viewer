@@ -3,7 +3,10 @@ part 'remote_response.freezed.dart';
 
 @freezed
 abstract class RemoteResponse<T> with _$RemoteResponse<T> {
-  const factory RemoteResponse.noConnection() = _NoConnection<T>;
-  const factory RemoteResponse.notModified() = _NotModified<T>;
-  const factory RemoteResponse.withNewData(T data) = _WithNewData<T>;
+  const factory RemoteResponse.noConnection({required int maxPage}) =
+      _NoConnection<T>;
+  const factory RemoteResponse.notModified({required int maxPage}) =
+      _NotModified<T>;
+  const factory RemoteResponse.withNewData(T data, {required int maxPage}) =
+      _WithNewData<T>;
 }

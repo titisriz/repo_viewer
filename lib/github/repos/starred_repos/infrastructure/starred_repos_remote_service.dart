@@ -41,7 +41,8 @@ class StarredReposRemoteService {
         ),
       );
       if (response.statusCode == 304) {
-        return const RemoteResponse.notModified();
+        return RemoteResponse.notModified(
+            maxPage: previousHeaders?.link?.maxPage ?? 0);
       } else if (response.statusCode == 200) {
         final headers = GithubHeaders.parse(response);
         await _githubHeadersCache.saveHeaders(requestUrl, headers);
@@ -50,13 +51,15 @@ class StarredReposRemoteService {
             .map((e) => GithubRepoDto.fromJson(e))
             .toList();
 
-        return RemoteResponse.withNewData(convertedData);
+        return RemoteResponse.withNewData(convertedData,
+            maxPage: headers.link?.maxPage ?? 1);
       } else {
         throw RestApiException(response.statusCode);
       }
     } on DioError catch (e) {
       if (e.isNoConnectionError) {
-        return const RemoteResponse.noConnection();
+        return RemoteResponse.noConnection(
+            maxPage: previousHeaders?.link?.maxPage ?? 0);
       } else if (e.response != null) {
         throw RestApiException(e.response?.statusCode);
       } else {
