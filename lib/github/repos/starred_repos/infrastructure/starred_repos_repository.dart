@@ -4,12 +4,14 @@ import 'package:repo_viewer/core/infrastructure/network_exceptions.dart';
 import 'package:repo_viewer/github/core/domain/github_failure.dart';
 import 'package:repo_viewer/github/core/domain/github_repo.dart';
 import 'package:repo_viewer/github/core/infrastructure/github_repo_dto.dart';
+import 'package:repo_viewer/github/repos/starred_repos/infrastructure/starred_repos_local_service.dart';
 import 'package:repo_viewer/github/repos/starred_repos/infrastructure/starred_repos_remote_service.dart';
 
 class StarredRepository {
   final StarredReposRemoteService _remoteService;
+  final StarredReposLocalService _localService;
 
-  StarredRepository(this._remoteService);
+  StarredRepository(this._remoteService, this._localService);
   //TODO :local service
 
   Future<Either<GithubFailure, Fresh<List<GithubRepo>>>> getStarredReposPage(
@@ -17,18 +19,25 @@ class StarredRepository {
   ) async {
     try {
       final remotePageItems = await _remoteService.getStarredReposPage(page);
-      return right(remotePageItems.when(
-        //TODO :local service
-        noConnection: (maxPage) =>
-            Fresh.no([], isNextpageAvailable: page < maxPage),
-        //TODO :local service
-        notModified: (maxPage) =>
-            Fresh.yes([], isNextpageAvailable: page < maxPage),
+      return right(
+        await remotePageItems.when(
+          noConnection: (maxPage) async => Fresh.no(
+              await _localService.getPage(page).then((_) => _.toDomain()),
+              isNextpageAvailable: page < maxPage),
 
-        //TODO : local service save data
-        withNewData: (data, maxPage) =>
-            Fresh.yes(data.toDomain(), isNextpageAvailable: page < maxPage),
-      ));
+          notModified: (maxPage) async => Fresh.yes(
+            await _localService.getPage(page).then((_) => _.toDomain()),
+            isNextpageAvailable: page < maxPage,
+          ),
+
+          //TODO : local service save data
+          withNewData: (data, maxPage) async {
+            _localService.upsertPage(data, page);
+            return Fresh.yes(data.toDomain(),
+                isNextpageAvailable: page < maxPage);
+          },
+        ),
+      );
     } on RestApiException catch (e) {
       return left(GithubFailure.api(e.errorCode));
     }
