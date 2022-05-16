@@ -12,7 +12,6 @@ class StarredRepository {
   final StarredReposLocalService _localService;
 
   StarredRepository(this._remoteService, this._localService);
-  //TODO :local service
 
   Future<Either<GithubFailure, Fresh<List<GithubRepo>>>> getStarredReposPage(
     int page,
@@ -24,13 +23,10 @@ class StarredRepository {
           noConnection: (maxPage) async => Fresh.no(
               await _localService.getPage(page).then((_) => _.toDomain()),
               isNextpageAvailable: page < maxPage),
-
           notModified: (maxPage) async => Fresh.yes(
             await _localService.getPage(page).then((_) => _.toDomain()),
             isNextpageAvailable: page < maxPage,
           ),
-
-          //TODO : local service save data
           withNewData: (data, maxPage) async {
             _localService.upsertPage(data, page);
             return Fresh.yes(data.toDomain(),
