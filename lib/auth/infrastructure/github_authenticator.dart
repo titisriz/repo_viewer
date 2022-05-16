@@ -91,12 +91,12 @@ class GithubAuthenticator {
   }
 
   Future<Either<AuthFailure, Unit>> signOut() async {
-    final accessToken =
-        _credentialStorage.read().then((credential) => credential?.accessToken);
-
-    final userPass = stringToBase64.encode('$clientId:$clientSecret');
-
     try {
+      final accessToken = _credentialStorage
+          .read()
+          .then((credential) => credential?.accessToken);
+
+      final userPass = stringToBase64.encode('$clientId:$clientSecret');
       try {
         await _dio.deleteUri(
           revocationEndpoint,
@@ -105,8 +105,7 @@ class GithubAuthenticator {
             headers: {'Authorization': 'basic $userPass '},
           ),
         );
-        await _credentialStorage.clear();
-        return right(unit);
+        return clearCredentialStorage();
       } on DioError catch (e) {
         if (e.isNoConnectionError) {
           // print('Token not revoked');
@@ -117,6 +116,15 @@ class GithubAuthenticator {
           rethrow;
         }
       }
+    } on PlatformException {
+      return left(const AuthFailure.storage());
+    }
+  }
+
+  Future<Either<AuthFailure, Unit>> clearCredentialStorage() async {
+    try {
+      await _credentialStorage.clear();
+      return right(unit);
     } on PlatformException {
       return left(const AuthFailure.storage());
     }
