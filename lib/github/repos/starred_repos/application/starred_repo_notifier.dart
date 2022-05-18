@@ -24,7 +24,7 @@ abstract class StarredRepoState with _$StarredRepoState {
 }
 
 class StarredRepoNotifier extends StateNotifier<StarredRepoState> {
-  final StarredRepository _starredReposRepository;
+  final StarredReposRepository _starredReposRepository;
   StarredRepoNotifier(this._starredReposRepository)
       : super(StarredRepoState.initial(Fresh.yes([])));
 

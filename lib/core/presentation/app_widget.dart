@@ -50,6 +50,7 @@ class AppWidget extends ConsumerWidget {
           });
     });
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       title: 'Repo Viewer',
       theme: ThemeData(
         primarySwatch: Colors.blue,
