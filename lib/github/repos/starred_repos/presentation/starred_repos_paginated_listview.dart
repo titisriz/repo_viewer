@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:repo_viewer/github/core/shared/providers.dart';
+import 'package:repo_viewer/github/repos/starred_repos/presentation/repo_tile.dart';
 
 class StarredReposPaginatedListView extends StatelessWidget {
   const StarredReposPaginatedListView({
@@ -14,7 +15,13 @@ class StarredReposPaginatedListView extends StatelessWidget {
         final state = ref.watch(starredRepoNotifierProvider);
         return ListView.builder(
           itemBuilder: (context, index) {
-            return const Text("s");
+            return state.map(
+              initial: (_) => Container(child: const Text("Init")),
+              loadInProgress: (_) => Container(child: const Text("Loading")),
+              loadSuccess: (_) =>
+                  RepoTile(githubRepo: state.repos.entity[index]),
+              loadFailure: (_) => Container(child: const Text("fail")),
+            );
           },
           itemCount: state.map(
             initial: (_) => 0,

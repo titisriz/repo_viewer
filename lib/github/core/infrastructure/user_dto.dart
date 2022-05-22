@@ -11,15 +11,18 @@ abstract class UserDto with _$UserDto {
     @JsonKey(name: 'avatar_url') required String avatarUrl,
   }) = _UserDto;
 
-  factory UserDto.fromJsonManual(Map<String, dynamic> json) {
-    return UserDto(
-      name: json['login'] as String,
-      avatarUrl: json['avatar_url'] as String,
-    );
-  }
+  // factory UserDto.fromJsonManual(Map<String, dynamic> json) {
+  //   return UserDto(
+  //     name: json['login'] as String,
+  //     avatarUrl: json['avatar_url'] as String,
+  //   );
+  // }
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>
       _$UserDtoFromJson(json);
+
+  // @overridelll
+  // Map<String, dynamic> toJson() => _$UserDtoToJson(this);
 
   factory UserDto.fromDomain(User _) {
     return UserDto(name: _.name, avatarUrl: _.avatarUrl);

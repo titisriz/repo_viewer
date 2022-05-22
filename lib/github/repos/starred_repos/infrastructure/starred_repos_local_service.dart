@@ -17,7 +17,7 @@ class StarredReposLocalService {
         .records(
           dtos
               .mapIndexed((index, element) =>
-                  index + PaginationConfig.itemsPerpage * page)
+                  index + PaginationConfig.itemsPerpage * sembastPage)
               .toList(),
         )
         .put(

@@ -15,7 +15,11 @@ class _StarredReposPageState extends ConsumerState<StarredReposPage> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
+    waitInitStarredRepo();
+  }
+
+  void waitInitStarredRepo() async {
+    await Future.microtask(
       () => ref
           .read(starredRepoNotifierProvider.notifier)
           .getNextStarredReposPage(),

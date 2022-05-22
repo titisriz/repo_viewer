@@ -18,7 +18,8 @@ class StarredReposRemoteService {
   );
 
   Future<RemoteResponse<List<GithubRepoDto>>> getStarredReposPage(
-      int page) async {
+    int page,
+  ) async {
     final requestUrl = Uri.https(
       'api.github.com',
       'user/starred',
@@ -39,10 +40,7 @@ class StarredReposRemoteService {
           },
         ),
       );
-      if (response.statusCode == 304) {
-        return RemoteResponse.notModified(
-            maxPage: previousHeaders?.link?.maxPage ?? 0);
-      } else if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
         final headers = GithubHeaders.parse(response);
         await _githubHeadersCache.saveHeaders(requestUrl, headers);
 
@@ -52,6 +50,9 @@ class StarredReposRemoteService {
 
         return RemoteResponse.withNewData(convertedData,
             maxPage: headers.link?.maxPage ?? 1);
+      } else if (response.statusCode == 304) {
+        return RemoteResponse.notModified(
+            maxPage: previousHeaders?.link?.maxPage ?? 0);
       } else {
         throw RestApiException(response.statusCode);
       }
