@@ -10,7 +10,7 @@ String _descriptionFromJson(Object? json) {
 }
 
 @freezed
-abstract class GithubRepoDto with _$GithubRepoDto {
+class GithubRepoDto with _$GithubRepoDto {
   const GithubRepoDto._();
 
   const factory GithubRepoDto({

@@ -4,7 +4,7 @@ part 'github_headers.freezed.dart';
 part 'github_headers.g.dart';
 
 @freezed
-abstract class GithubHeaders with _$GithubHeaders {
+class GithubHeaders with _$GithubHeaders {
   const factory GithubHeaders({
     String? etag,
     PaginationLink? link,
@@ -23,7 +23,7 @@ abstract class GithubHeaders with _$GithubHeaders {
 }
 
 @freezed
-abstract class PaginationLink with _$PaginationLink {
+class PaginationLink with _$PaginationLink {
   const factory PaginationLink({
     required int maxPage,
   }) = _PaginationLink;

@@ -22,6 +22,19 @@ class RepoTile extends StatelessWidget {
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Icon(Icons.star_border),
+          const SizedBox(
+            height: 4,
+          ),
+          Text(
+            githubRepo.stargazersCount.toString(),
+            style: Theme.of(context).textTheme.caption,
+          ),
+        ],
+      ),
     );
   }
 }

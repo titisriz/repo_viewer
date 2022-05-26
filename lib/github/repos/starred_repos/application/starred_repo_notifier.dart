@@ -9,7 +9,7 @@ import 'package:repo_viewer/github/repos/starred_repos/infrastructure/starred_re
 part 'starred_repo_notifier.freezed.dart';
 
 @freezed
-abstract class StarredRepoState with _$StarredRepoState {
+class StarredRepoState with _$StarredRepoState {
   const factory StarredRepoState.initial(
     Fresh<List<GithubRepo>> repos,
   ) = _Initial;
