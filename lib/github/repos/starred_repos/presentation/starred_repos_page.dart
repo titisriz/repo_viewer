@@ -34,7 +34,6 @@ class _StarredReposPageState extends ConsumerState<StarredReposPage> {
           actions: [
             IconButton(
               onPressed: () {
-                print("signout");
                 // ref.read(authNotifierProvider.notifier).signOut();
               },
               icon: const Icon(MdiIcons.logoutVariant),

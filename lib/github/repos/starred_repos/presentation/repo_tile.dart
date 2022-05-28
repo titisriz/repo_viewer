@@ -35,6 +35,9 @@ class RepoTile extends StatelessWidget {
           ),
         ],
       ),
+      onTap: () {
+        //TODO: implement detail page
+      },
     );
   }
 }

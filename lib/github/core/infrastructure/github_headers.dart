@@ -10,9 +10,9 @@ class GithubHeaders with _$GithubHeaders {
     PaginationLink? link,
   }) = _GithubHeaders;
   factory GithubHeaders.parse(Response response) {
-    final link = response.headers['Links']?[0];
+    final link = response.headers['link']?[0];
     return GithubHeaders(
-        etag: response.headers.map['ETag']?[0],
+        etag: response.headers.map['etag']?[0],
         link: link == null
             ? null
             : PaginationLink.parse(
