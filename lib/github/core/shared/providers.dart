@@ -32,7 +32,7 @@ final starredReposRepositoryProvider = Provider(
 );
 
 final starredRepoNotifierProvider =
-    StateNotifierProvider<StarredRepoNotifier, PaginatedRepoState>(
+    StateNotifierProvider.autoDispose<StarredRepoNotifier, PaginatedRepoState>(
         (ref) => StarredRepoNotifier(
               ref.watch(starredReposRepositoryProvider),
             ));
@@ -51,7 +51,7 @@ final searchedReposRepositoryProvider = Provider(
 );
 
 final searchedRepoNotifierProvider =
-    StateNotifierProvider<SearchRepoNotifier, PaginatedRepoState>(
+    StateNotifierProvider.autoDispose<SearchRepoNotifier, PaginatedRepoState>(
         (ref) => SearchRepoNotifier(
               ref.watch(searchedReposRepositoryProvider),
             ));
