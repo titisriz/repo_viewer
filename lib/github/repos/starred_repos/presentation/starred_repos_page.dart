@@ -1,6 +1,9 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:repo_viewer/auth/shared/providers.dart';
+import 'package:repo_viewer/core/presentation/routes/app_router.gr.dart';
 import 'package:repo_viewer/github/core/shared/providers.dart';
 import 'package:repo_viewer/github/repos/core/presentation/repos_paginated_listview.dart';
 
@@ -15,10 +18,10 @@ class _StarredReposPageState extends ConsumerState<StarredReposPage> {
   @override
   void initState() {
     super.initState();
-    waitInitStarredRepo();
+    _waitInitStarredRepo();
   }
 
-  void waitInitStarredRepo() async {
+  void _waitInitStarredRepo() async {
     await Future.microtask(
       () => ref
           .read(starredRepoNotifierProvider.notifier)
@@ -34,10 +37,18 @@ class _StarredReposPageState extends ConsumerState<StarredReposPage> {
         actions: [
           IconButton(
             onPressed: () {
-              // ref.read(authNotifierProvider.notifier).signOut();
+              ref.read(authNotifierProvider.notifier).signOut();
             },
             icon: const Icon(MdiIcons.logoutVariant),
-          )
+          ),
+          IconButton(
+              onPressed: () {
+                AutoRouter.of(context)
+                    .push(SearchedReposRoute(searchTerm: 'flutter'));
+              },
+              icon: const Icon(
+                MdiIcons.magnify,
+              )),
         ],
       ),
       body: ReposPaginatedListView(
