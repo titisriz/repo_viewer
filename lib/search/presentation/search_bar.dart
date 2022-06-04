@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 import 'package:repo_viewer/search/shared/providers.dart';
 
@@ -26,7 +27,6 @@ class SearchBar extends ConsumerStatefulWidget {
 class _SearchBarState extends ConsumerState<SearchBar> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     Future.microtask(() =>
         ref.read(searchHistoryNotifierProvider.notifier).watchSearchTerms());
@@ -34,6 +34,27 @@ class _SearchBarState extends ConsumerState<SearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return FloatingSearchBar(
+      builder: (context, transition) {
+        return Container();
+      },
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        // mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            widget.title,
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          Text(
+            'Tap to Search 👆',
+            style: Theme.of(context).textTheme.caption,
+          )
+        ],
+      ),
+      hint: widget.hint,
+      body: widget.body,
+    );
   }
 }

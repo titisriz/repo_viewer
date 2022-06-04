@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:repo_viewer/core/presentation/toast.dart';
 import 'package:repo_viewer/github/core/presentation/no_results.dart';
 import 'package:repo_viewer/github/repos/core/application/paginated_repo_notifier.dart';
@@ -83,26 +84,36 @@ class _PaginatedListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: state.map(
-        initial: (_) => 0,
-        loadInProgress: (_) => _.repos.entity.length + _.itemsPerpage,
-        loadSuccess: (_) => _.repos.entity.length,
-        loadFailure: (_) => _.repos.entity.length + 1,
+    // context.findAncestorWidgetOfExactType<FloatingSearchBar>()?.height;
+    final fsb = FloatingSearchBar.of(context)?.widget;
+
+    return Padding(
+      padding: fsb == null
+          ? EdgeInsets.zero
+          : EdgeInsets.only(
+              top: fsb.height + MediaQuery.of(context).padding.top),
+      // padding: EdgeInsets.zero,
+      child: ListView.builder(
+        itemCount: state.map(
+          initial: (_) => 0,
+          loadInProgress: (_) => _.repos.entity.length + _.itemsPerpage,
+          loadSuccess: (_) => _.repos.entity.length,
+          loadFailure: (_) => _.repos.entity.length + 1,
+        ),
+        itemBuilder: (context, index) {
+          return state.map(
+            initial: (_) => RepoTile(githubRepo: _.repos.entity[index]),
+            loadInProgress: (_) {
+              if (index < _.repos.entity.length) {
+                return RepoTile(githubRepo: state.repos.entity[index]);
+              }
+              return const RepoTileLoading();
+            },
+            loadSuccess: (_) => RepoTile(githubRepo: state.repos.entity[index]),
+            loadFailure: (_) => RepoTileFailure(failure: _.failure),
+          );
+        },
       ),
-      itemBuilder: (context, index) {
-        return state.map(
-          initial: (_) => RepoTile(githubRepo: _.repos.entity[index]),
-          loadInProgress: (_) {
-            if (index < _.repos.entity.length) {
-              return RepoTile(githubRepo: state.repos.entity[index]);
-            }
-            return const RepoTileLoading();
-          },
-          loadSuccess: (_) => RepoTile(githubRepo: state.repos.entity[index]),
-          loadFailure: (_) => RepoTileFailure(failure: _.failure),
-        );
-      },
     );
   }
 }

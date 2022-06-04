@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class NoResultsDisplay extends StatelessWidget {
-  String message;
+  final String message;
 
-  NoResultsDisplay({
+  const NoResultsDisplay({
     Key? key,
     required this.message,
   }) : super(key: key);

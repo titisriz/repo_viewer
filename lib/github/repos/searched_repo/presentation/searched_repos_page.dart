@@ -24,8 +24,8 @@ class _SearchedReposPageState extends ConsumerState<SearchedReposPage> {
     _waitInitStateRepo();
   }
 
-  void _waitInitStateRepo() async {
-    await Future.microtask(
+  void _waitInitStateRepo() {
+    Future.microtask(
       () => ref
           .read(searchedRepoNotifierProvider.notifier)
           .getSearchedRepo(widget.searchTerm),
@@ -34,6 +34,7 @@ class _SearchedReposPageState extends ConsumerState<SearchedReposPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("inside search repo page");
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.searchTerm),
