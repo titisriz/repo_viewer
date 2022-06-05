@@ -14,7 +14,7 @@ class SearchHistoryRepository {
           finder: filter != null && filter.isNotEmpty
               ? Finder(
                   filter: Filter.custom(
-                    (record) => (record as String).startsWith(filter),
+                    (record) => (record.value as String).startsWith(filter),
                   ),
                 )
               : null,
@@ -42,8 +42,7 @@ class SearchHistoryRepository {
       DatabaseClient dbClient, String searchTerm) async {
     final key = await _store.findKey(dbClient);
     if (key != null) {
-      upsertSearchTerm(searchTerm);
-      return;
+      _deleteSearchTerm(dbClient, searchTerm);
     }
 
     await _store.add(_sembastDatabase.instance, searchTerm);
