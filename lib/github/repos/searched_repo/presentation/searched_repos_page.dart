@@ -1,9 +1,12 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:repo_viewer/auth/shared/providers.dart';
+import 'package:repo_viewer/core/presentation/routes/app_router.gr.dart';
 import 'package:repo_viewer/github/core/shared/providers.dart';
 import 'package:repo_viewer/github/repos/core/presentation/repos_paginated_listview.dart';
+import 'package:repo_viewer/search/presentation/search_bar.dart';
 
 class SearchedReposPage extends ConsumerStatefulWidget {
   final String searchTerm;
@@ -28,13 +31,12 @@ class _SearchedReposPageState extends ConsumerState<SearchedReposPage> {
     Future.microtask(
       () => ref
           .read(searchedRepoNotifierProvider.notifier)
-          .getSearchedRepo(widget.searchTerm),
+          .getFirstSearchedRepo(widget.searchTerm),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    print("inside search repo page");
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.searchTerm),
@@ -48,12 +50,25 @@ class _SearchedReposPageState extends ConsumerState<SearchedReposPage> {
               )),
         ],
       ),
-      body: ReposPaginatedListView(
-        paginatedRepoNotifierProvider: searchedRepoNotifierProvider,
-        getNextPage: (ref) => ref
-            .read(searchedRepoNotifierProvider.notifier)
-            .getSearchedRepo(widget.searchTerm),
-        noResultDisplay: 'That\'s all we could find for your search..',
+      body: SearchBar(
+        title: 'Starred repositories',
+        hint: 'Search all repository...',
+        onShouldNavigateToResultPage: (searchTerm) {
+          AutoRouter.of(context).pushAndPopUntil(
+            SearchedReposRoute(searchTerm: searchTerm),
+            predicate: (route) => route.settings.name == StarredReposRoute.name,
+          );
+        },
+        onSignOutButtonPressed: () {
+          ref.read(authNotifierProvider.notifier).signOut();
+        },
+        body: ReposPaginatedListView(
+          paginatedRepoNotifierProvider: searchedRepoNotifierProvider,
+          getNextPage: (ref) => ref
+              .read(searchedRepoNotifierProvider.notifier)
+              .getSearchedRepo(widget.searchTerm),
+          noResultDisplay: 'That\'s all we could find for your search..',
+        ),
       ),
     );
   }

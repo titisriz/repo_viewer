@@ -29,6 +29,12 @@ class PaginatedRepoNotifier extends StateNotifier<PaginatedRepoState> {
   PaginatedRepoNotifier() : super(PaginatedRepoState.initial(Fresh.yes([])));
 
   @protected
+  Future<void> resetState() async {
+    _page = 1;
+    state = PaginatedRepoState.initial(Fresh.yes([]));
+  }
+
+  @protected
   Future<void> getNextPage(
       Future<Either<GithubFailure, Fresh<List<GithubRepo>>>> Function(int page)
           getter) async {
