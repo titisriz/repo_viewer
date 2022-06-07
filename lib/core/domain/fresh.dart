@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'fresh.freezed.dart';
 
 @freezed
-abstract class Fresh<T> with _$Fresh<T> {
+class Fresh<T> with _$Fresh<T> {
   const Fresh._();
   const factory Fresh({
     required T entity,
