@@ -18,7 +18,7 @@ final dioAuthProvider = Provider(
   (ref) => Dio(),
 );
 
-final oAuth2InterceptorProvicer = Provider((ref) => Oauth2Interceptor(
+final oAuth2InterceptorProvider = Provider((ref) => Oauth2Interceptor(
     ref.watch(githubAuthenticatorProvider),
     ref.watch(authNotifierProvider.notifier),
     ref.watch(dioAuthProvider)));

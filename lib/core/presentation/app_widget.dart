@@ -19,7 +19,7 @@ final initializationProvider = FutureProvider<Unit>(
           'Accept': 'application/vnd.github.v3.html.json',
         },
       )
-      ..interceptors.add(ref.read(oAuth2InterceptorProvicer));
+      ..interceptors.add(ref.read(oAuth2InterceptorProvider));
 
     final authNotifier = ref.read(authNotifierProvider.notifier);
     await authNotifier.checkAndUpdateAuthStatus();

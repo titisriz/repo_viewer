@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:repo_viewer/core/infrastructure/dio_extensions.dart';
 import 'package:repo_viewer/core/infrastructure/network_exceptions.dart';
@@ -11,10 +12,10 @@ class RepoDetailRemoteRepository {
 
   RepoDetailRemoteRepository(this._dio, this._githubHeadersCache);
 
-  Future<RemoteResponse<String>> getRepoDetailHtml(String fullName) async {
+  Future<RemoteResponse<String>> getRepoDetailHtml(String repoFullName) async {
     final requestUrl = Uri.https(
       'api.github.com',
-      'repos/$fullName/readme',
+      'repos/$repoFullName/readme',
     );
     final previousHeaders = await _githubHeadersCache.getHeaders(requestUrl);
 
@@ -38,9 +39,77 @@ class RepoDetailRemoteRepository {
     } on DioError catch (e) {
       if (e.isNoConnectionError) {
         return const RemoteResponse.noConnection();
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
       } else {
         rethrow;
       }
     }
+  }
+
+//returns `null` if there is no connection occured
+  Future<bool?> getStarredStatus(String repoFullName) async {
+    final requestUrl = Uri.https(
+      'api.github.com',
+      'user/starred/$repoFullName',
+    );
+
+    try {
+      final response = await _dio.getUri(requestUrl,
+          options: Options(
+            validateStatus: (status) =>
+                (status != null && status >= 200 && status < 400) ||
+                status == 404,
+          ));
+
+      if (response.statusCode == 200) {
+        return true;
+      } else if (response.statusCode == 404) {
+        return false;
+      } else {
+        throw RestApiException(response.statusCode);
+      }
+    } on DioError catch (e) {
+      if (e.isNoConnectionError) {
+        return null;
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      } else {
+        rethrow;
+      }
+    }
+  }
+
+  Future<Unit?> switchStarredStatus(String repoFullName,
+      {required bool isCurrentlyStarred}) async {
+    final requestUri = Uri.https(
+      'api.github.com',
+      'user/starred/$repoFullName',
+    );
+
+    try {
+      final response = await (isCurrentlyStarred
+          ? _dio.deleteUri(requestUri)
+          : _dio.putUri(
+              requestUri,
+              options: Options(
+                headers: {'Content-Length': '0'},
+              ),
+            ));
+
+      if (response.statusCode == 204) {
+        return unit;
+      } else {
+        throw RestApiException(response.statusCode);
+      }
+    } on DioError catch (e) {
+      if (e.isNoConnectionError) {
+        return null;
+      } else if (e.response != null) {
+        throw RestApiException(e.response?.statusCode);
+      }
+      rethrow;
+    }
+    return null;
   }
 }
