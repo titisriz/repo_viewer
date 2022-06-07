@@ -14,7 +14,7 @@ class RepoDetailRemoteRepository {
   Future<RemoteResponse<String>> getRepoDetailHtml(String fullName) async {
     final requestUrl = Uri.https(
       'api.github.com',
-      'repos',
+      'repos/$fullName/readme',
     );
     final previousHeaders = await _githubHeadersCache.getHeaders(requestUrl);
 
