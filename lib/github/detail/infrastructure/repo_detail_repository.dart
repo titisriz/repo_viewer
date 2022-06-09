@@ -32,7 +32,7 @@ class RepoDetailRepository {
     }
   }
 
-  Future<Either<GithubFailure, Fresh<GithubRepoDetail?>>> getRepoDetailHtml(
+  Future<Either<GithubFailure, Fresh<GithubRepoDetail?>>> getRepoDetail(
     String repoFullName,
   ) async {
     try {
