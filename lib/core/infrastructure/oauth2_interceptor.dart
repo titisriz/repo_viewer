@@ -26,8 +26,8 @@ class Oauth2Interceptor extends Interceptor {
     handler.next(modifiedOptions);
   }
 
-  // @override
-  Future<void> onError2(DioError err, ErrorInterceptorHandler handler) async {
+  @override
+  Future<void> onError(DioError err, ErrorInterceptorHandler handler) async {
     final errorResponse = err.response;
     if (errorResponse != null && errorResponse.statusCode == 401) {
       final credentials = await _authenticator.getSignedInCredentials();
@@ -47,9 +47,9 @@ class Oauth2Interceptor extends Interceptor {
                   'bearer ${refreshedCredential.accessToken}',
           ),
         );
-      } else {
-        handler.next(err);
       }
+    } else {
+      handler.next(err);
     }
   }
 }

@@ -54,15 +54,18 @@ class AppWidget extends ConsumerWidget {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Repo Viewer',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: _setupThemeData(),
       routerDelegate: appRouter.delegate(),
       routeInformationParser: appRouter.defaultRouteParser(),
     );
   }
 }
 
+ThemeData _setupThemeData() {
+  return ThemeData(
+      colorScheme: ColorScheme.light(primary: Colors.grey.shade50),
+      appBarTheme: AppBarTheme(foregroundColor: Colors.grey.shade800));
+}
 
 // class AppWidget extends StatelessWidget {
 //   AppWidget({Key? key}) : super(key: key);
