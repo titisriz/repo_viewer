@@ -1,6 +1,10 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:repo_viewer/core/shared/providers.dart';
 import 'package:repo_viewer/github/core/infrastructure/github_headers_cache.dart';
+import 'package:repo_viewer/github/detail/application/repo_detail_notifier.dart';
+import 'package:repo_viewer/github/detail/infrastructure/repo_detail_local_repository.dart';
+import 'package:repo_viewer/github/detail/infrastructure/repo_detail_remote_repository.dart';
+import 'package:repo_viewer/github/detail/infrastructure/repo_detail_repository.dart';
 import 'package:repo_viewer/github/repos/core/application/paginated_repo_notifier.dart';
 import 'package:repo_viewer/github/repos/searched_repo/application/searched_repo_notifier.dart';
 import 'package:repo_viewer/github/repos/searched_repo/infrastructure/searched_repos_remote_service.dart';
@@ -52,6 +56,35 @@ final searchedReposRepositoryProvider = Provider(
 
 final searchedRepoNotifierProvider =
     StateNotifierProvider.autoDispose<SearchRepoNotifier, PaginatedRepoState>(
-        (ref) => SearchRepoNotifier(
-              ref.watch(searchedReposRepositoryProvider),
-            ));
+  (ref) => SearchRepoNotifier(
+    ref.watch(searchedReposRepositoryProvider),
+  ),
+);
+
+final repoDetailLocalRepositoryProvider = Provider<RepoDetailLocalRepository>(
+  (ref) => RepoDetailLocalRepository(
+    ref.watch(sembastProvider),
+    ref.watch(githubHeaderCacheProvider),
+  ),
+);
+
+final repoDetailRemoteRepositoryProvider = Provider<RepoDetailRemoteRepository>(
+  (ref) => RepoDetailRemoteRepository(
+    ref.watch(dioProvider),
+    ref.watch(githubHeaderCacheProvider),
+  ),
+);
+
+final repoDetailRepositoryProvider = Provider<RepoDetailRepository>(
+  (ref) => RepoDetailRepository(
+      ref.watch(repoDetailLocalRepositoryProvider),
+      ref.watch(repoDetailRemoteRepositoryProvider),
+      ref.watch(githubHeaderCacheProvider)),
+);
+
+final repoDetailNotifier =
+    StateNotifierProvider.autoDispose<RepoDetailNotifier, RepoDetailState>(
+  (ref) => RepoDetailNotifier(
+    ref.watch(repoDetailRepositoryProvider),
+  ),
+);
