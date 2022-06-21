@@ -77,12 +77,12 @@ final repoDetailRemoteRepositoryProvider = Provider<RepoDetailRemoteRepository>(
 
 final repoDetailRepositoryProvider = Provider<RepoDetailRepository>(
   (ref) => RepoDetailRepository(
-      ref.watch(repoDetailLocalRepositoryProvider),
-      ref.watch(repoDetailRemoteRepositoryProvider),
-      ref.watch(githubHeaderCacheProvider)),
+    ref.watch(repoDetailLocalRepositoryProvider),
+    ref.watch(repoDetailRemoteRepositoryProvider),
+  ),
 );
 
-final repoDetailNotifier =
+final repoDetailNotifierProvider =
     StateNotifierProvider.autoDispose<RepoDetailNotifier, RepoDetailState>(
   (ref) => RepoDetailNotifier(
     ref.watch(repoDetailRepositoryProvider),

@@ -62,7 +62,7 @@ class RepoDetailRemoteRepository {
                 status == 404,
           ));
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 204) {
         return true;
       } else if (response.statusCode == 404) {
         return false;

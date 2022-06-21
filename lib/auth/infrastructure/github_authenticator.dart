@@ -35,8 +35,8 @@ class GithubAuthenticator {
   static final redirectUrl = Uri.parse('http://localhost:3000/callback');
   static final revocationEndpoint =
       Uri.parse('https://api.github.com/applications/$clientId/token');
-  static const clientId = '';
-  static const clientSecret = '';
+  static const clientId = '777db6fcdbd91734685b';
+  static const clientSecret = 'e34bd76ba76071e55d1cd1b01552a1ffe4503592';
   static const scopes = ['read:user, repo'];
 
   Future<Credentials?> getSignedInCredentials() async {
